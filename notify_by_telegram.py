@@ -11,6 +11,7 @@ def connect_to_rabbit(rabbit_host, rabbit_queue):
 
     channel.queue_declare(queue=rabbit_queue)
 
+    print(' [*] Created connection to RabbitMQ server on %s' % rabbit_host)
     return channel
 
 
