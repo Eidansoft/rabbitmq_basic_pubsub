@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 from rabbit_consumer_basic import Rabbit_consumer_basic
 import sys
+import telegram_send
 
 class Notify_telegram(Rabbit_consumer_basic):
 
     def callback(self, channel, method, properties, body):
-        print(" [x] Received and this will be send to telegram %r" % body)
+        telegram_send.send(messages=[body.decode("utf-8")], parse_mode='text')
+        print(" [x] Received and sent to telegram %r" % body)
 
 
 if __name__ == "__main__":
