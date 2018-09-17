@@ -6,7 +6,7 @@ import telegram_send
 class Notify_telegram(Rabbit_consumer_basic):
 
     def callback(self, channel, method, properties, body):
-        telegram_send.send(messages=[body.decode("utf-8")], parse_mode='text')
+        telegram_send.send(messages=[body.decode("utf-8")], parse_mode='text', conf='/etc/telegram-send.conf')
         print(" [x] Received and sent to telegram %r" % body)
 
 
