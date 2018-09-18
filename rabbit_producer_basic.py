@@ -49,10 +49,10 @@ class Rabbit_producer_basic():
 
         self.connect_to_rabbit()
         self.channel.basic_publish(exchange=self.exchange,
-                              routing_key='',
-                              body=self.message)
+                                   routing_key='',
+                                   body=self.message)
         self.disconnect_rabbit()
-        print(' [*] Connected to RabbitMQ on %s and sent message "%s"' % (self.host, self.message))
+        print(' [*] Connected to RabbitMQ on %s and try to sent message "%s"' % (self.host, self.message))
 
 
 if __name__ == "__main__":
