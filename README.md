@@ -7,11 +7,11 @@ I use the RabbitMQ in order to centralise the messages easely and route to the d
 To start, you just need to follow the below steps:
 * Create a docker network in order to get all containers on that network be able to see it each others:
 
-    docker network create notify_net
+      docker network create notify_net
 
 * Start a RabbitMQ server in a docker container and connected to the previously created network. Once the container is started you will be able to connect it using a browser and surf to the `http://localhost:8080` and use the credentials set by params `guest/guest` feel free to configure that by yourself.
 
-    docker run -d --hostname rabbit --name rabbit -p 5672:5672 -p 8080:15672 -e RABBITMQ_DEFAULT_USER=guest -e RABBITMQ_DEFAULT_PASS=guest --net notify_net rabbitmq:management-alpine
+      docker run -d --hostname rabbit --name rabbit -p 5672:5672 -p 8080:15672 -e RABBITMQ_DEFAULT_USER=guest -e RABBITMQ_DEFAULT_PASS=guest --net notify_net rabbitmq:management-alpine
 
 * Once you have the rabbit up&running you can run one of the services, currently developed services are:
 
