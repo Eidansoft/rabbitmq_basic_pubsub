@@ -5,6 +5,10 @@ I use the RabbitMQ in order to centralise the messages easely and route to the d
 
 # Steps to put it up&running
 To start, you just need to follow the below steps:
+* Create the docker image:
+
+      docker build . -t notify_telegram
+
 * Create a docker network in order to get all containers on that network be able to see it each others:
 
       docker network create notify_net
