@@ -21,3 +21,13 @@ In order to test it, you just need to follow the below steps:
 # Test
 
 Now if you go to the RabbitMQ web interface and log in, you will be able to add messages to the already existent queue `telegram`. For every message added to the queue, you will get it into your telegram.
+
+# Normal use
+
+The idea is to generate notifications from any process or program. In order to achieve this, you have the script `rabbit_producer_basic.py`, that script will send messages to the configured exchange. You can call it:
+
+    ./rabbit_producer_basic.py --host HOST --exchange EXCHANGE_NAME --message "Message test"
+
+If you are running the containers locally, your host will be `localhost`. Otherwise if you are calling this script from a service on a container, you must remmember to start that container connected to the same network than the Rabbit one. And use then as a host the name you give to the container, if you followed the previous commmand then is `rabbit`.
+
+Because of the internal design of RabbitMQ, the messages sent to an exchange not binded to a queue are discarded. So the last step to make the messages reach your telegram account is to bind into RabbitMQ web interface the `telegram` queue with the `EXCHANGE_NAME` exchange.
