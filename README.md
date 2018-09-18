@@ -15,7 +15,7 @@ To start, you just need to follow the below steps:
 
 * Once you have the rabbit up&running you can run one of the services, currently developed services are:
 
-** Telegram: For sending telegram messages
+  * Telegram: For sending telegram messages
 
 # Configure and start Telegram service:
 The telegram service needs to be configured. To configure it you just need a telegram client and a normal account. Then you can run the configuration script with command below and follow the screen instructions:
