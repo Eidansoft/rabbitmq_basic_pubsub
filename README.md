@@ -7,15 +7,19 @@ I use the RabbitMQ in order to centralise the messages easely and route to the d
 To start, you just need to follow the below steps:
 * Create the docker image:
 
-      docker build . -t notify_telegram
+      sudo docker build . -t notify_telegram
+
+* Get the RabbitMQ docker image:
+
+      sudo docker pull rabbitmq:management-alpine
 
 * Create a docker network in order to get all containers on that network be able to see it each others:
 
-      docker network create notify_net
+      sudo docker network create notify_net
 
 * Start a RabbitMQ server in a docker container and connected to the previously created network. Once the container is started you will be able to connect it using a browser and surf to the `http://localhost:8080` and use the credentials set by params `guest/guest` feel free to configure that by yourself.
 
-      docker run -d --hostname rabbit --name rabbit -p 5672:5672 -p 8080:15672 -e RABBITMQ_DEFAULT_USER=guest -e RABBITMQ_DEFAULT_PASS=guest --net notify_net rabbitmq:management-alpine
+      sudo docker run -d --hostname rabbit --name rabbit -p 5672:5672 -p 8080:15672 -e RABBITMQ_DEFAULT_USER=guest -e RABBITMQ_DEFAULT_PASS=guest --net notify_net --restart unless-stopped rabbitmq:management-alpine
 
 * Once you have the rabbit up&running you can run one of the services, currently developed services are:
 
@@ -24,11 +28,11 @@ To start, you just need to follow the below steps:
 # Configure and start Telegram service:
 The telegram service needs to be configured. To configure it you just need a telegram client and a normal account. Then you can run the configuration script with command below and follow the screen instructions:
 
-    docker run -it --rm --name configure_telegram -v $PWD:/mnt notify_telegram telegram-send --configure --config /mnt/telegram-send.conf
+    sudo docker run -it --rm --name configure_telegram -v $PWD:/mnt notify_telegram telegram-send --configure --config /mnt/telegram-send.conf
 
 Once the telegram is configured to send you the messages you can just start the service. This service will be listening to a rabbit queue, and any service you want can send messages to that rabbit queue in order the service process them and send it to you by telegram. To start thhe service you just need to run:
 
-    docker run -d --name telegram --net notify_net --rm notify_telegram
+    sudo docker run -d --name telegram --net notify_net --restart unless-stopped notify_telegram
 
 # Test
 
