@@ -3,20 +3,22 @@ import sys, getopt
 import pika
 
 class Rabbit_consumer_basic():
-    rabbit_host = ''
-    rabbit_queue = ''
+    user = None
+    passwd = None
+    host = None
+    queue = None
     connection = None
     channel = None
 
     def connect_to_rabbit(self):
 
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=self.rabbit_host))
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=self.host, credentials=pika.PlainCredentials(self.user, self.passwd)))
 
         self.channel = self.connection.channel()
 
-        self.channel.queue_declare(queue=self.rabbit_queue)
+        self.channel.queue_declare(queue=self.queue)
 
-        print(' [*] Created connection to RabbitMQ server on %s' % self.rabbit_host)
+        print(' [*] Created connection to RabbitMQ server on %s' % self.host)
 
 
     def callback(self, channel, method, properties, body):
@@ -25,19 +27,19 @@ class Rabbit_consumer_basic():
 
     def start_service(self):
         self.channel.basic_consume(self.callback,
-                              queue=self.rabbit_queue,
+                              queue=self.queue,
                               no_ack=True)
         print(' [*] Waiting for messages. To exit press CTRL+C')
         self.channel.start_consuming()
 
 
     def show_usage(self):
-        print ('notify_by_telegram.py --host HOST_NAME --queue QUEUE_NAME')
+        print ('notify_by_telegram.py --host HOST_NAME --user USER --pw PASSWORD --queue QUEUE_NAME')
 
 
     def main(self, argv):
         try:
-            opts, args = getopt.getopt(argv,"",["host=","queue="])
+            opts, args = getopt.getopt(argv,"",["host=","queue=","user=","pw="])
             pass
         except getopt.GetoptError:
             print('[ERROR] Params received not correct.')
@@ -45,11 +47,15 @@ class Rabbit_consumer_basic():
             sys.exit(2)
         for opt, arg in opts:
             if opt == "--host":
-               self.rabbit_host = arg
+               self.host = arg
             elif opt == "--queue":
-               self.rabbit_queue = arg
-        if (self.rabbit_host == '' or self.rabbit_queue == ''):
-            print('[ERROR] Mandatory param empty.\nHOST: %s\nQUEUE: %s\n' % (self.rabbit_host, self.rabbit_queue))
+               self.queue = arg
+            elif opt == "--user":
+               self.user = arg
+            elif opt == "--pw":
+               self.passwd = arg
+        if (self.host == '' or self.queue == '' or self.user == ''):
+            print('[ERROR] Mandatory param empty.\nHOST: %s\nQUEUE: %s\nUSER: %s\n' % (self.host, self.queue, self.user))
             self.show_usage()
             sys.exit(2)
 
