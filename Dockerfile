@@ -15,5 +15,7 @@ WORKDIR /mnt
 
 ENV QUEUE_HOST rabbit
 ENV QUEUE_NAME telegram
+ENV USER guest
+ENV PW guest
 
-CMD notify_by_telegram.py --host $QUEUE_HOST --queue $QUEUE_NAME
+CMD notify_by_telegram.py --host $QUEUE_HOST --user $USER --pw $PW --queue $QUEUE_NAME

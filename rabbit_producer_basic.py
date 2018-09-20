@@ -3,6 +3,8 @@ import sys, getopt
 import pika
 
 class Rabbit_producer_basic():
+    user = None
+    passwd = None
     host = None
     exchange = None
     connection = None
@@ -11,7 +13,7 @@ class Rabbit_producer_basic():
 
     def connect_to_rabbit(self):
 
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=self.host))
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=self.host, credentials=pika.PlainCredentials(self.user, self.passwd)))
 
         self.channel = self.connection.channel()
 
@@ -23,12 +25,12 @@ class Rabbit_producer_basic():
 
 
     def show_usage(self):
-        print ('notify_by_telegram.py --host HOST_NAME --exchange EXCHANGE_NAME --message MESSAGE')
+        print ('notify_by_telegram.py --host HOST_NAME --user USER --pw PASSWORD --exchange EXCHANGE_NAME --message MESSAGE')
 
 
     def main(self, argv):
         try:
-            opts, args = getopt.getopt(argv,"",["host=","exchange=","message="])
+            opts, args = getopt.getopt(argv,"",["host=","exchange=","message=","user=","pw="])
             pass
         except getopt.GetoptError:
             print('[ERROR] Params received not correct.')
@@ -41,9 +43,13 @@ class Rabbit_producer_basic():
                self.exchange = arg
             elif opt == "--message":
                 self.message = arg
+            elif opt == "--user":
+               self.user = arg
+            elif opt == "--pw":
+               self.passwd = arg
 
         if (not self.host or not self.exchange or not self.message):
-            print('[ERROR] Mandatory param empty.\nHOST: %s\nEXCHANGE: %s\nMESSAGE: %s\n' % (self.host, self.exchange, self.message))
+            print('[ERROR] Mandatory param empty.\nHOST: %s\nEXCHANGE: %s\nUSER: %s\nMESSAGE: %s\n' % (self.host, self.exchange, self.user, self.message))
             self.show_usage()
             sys.exit(2)
 
