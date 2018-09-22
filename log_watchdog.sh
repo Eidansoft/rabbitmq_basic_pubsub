@@ -8,9 +8,9 @@ COMMAND="$2"
 
 while read line ; do
     echo "$line"
-    echo "$line" | grep -q $PATTERN
+    echo "$line" | grep -q "$PATTERN"
     if [ $? = 0 ]
     then
-         eval $COMMAND
+         eval "$COMMAND"
     fi
 done <&0
