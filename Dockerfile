@@ -8,8 +8,8 @@ COPY telegram-send.conf /etc/telegram-send.conf
 
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repositories && \
     apk add --update bash build-base openssl-dev libffi-dev && \
-    rm -rf /tmp/* /var/tmp/* /var/cache/apk/* /var/cache/distfiles/* && \
-    pip install pika telegram-send
+    pip install pika telegram-send && \
+    rm -rf /tmp/* /var/tmp/* /var/cache/apk/* /var/cache/distfiles/* /root/.cache/*
 
 WORKDIR /mnt
 
