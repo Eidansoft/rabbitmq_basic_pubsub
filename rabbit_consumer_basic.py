@@ -34,7 +34,7 @@ class Rabbit_consumer_basic():
 
 
     def show_usage(self):
-        print ('notify_by_telegram.py --host HOST_NAME --user USER --pw PASSWORD --queue QUEUE_NAME')
+        print ('rabbit_consumer_basic.py --host HOST_NAME --user USER --pw PASSWORD --queue QUEUE_NAME')
 
 
     def main(self, argv):
