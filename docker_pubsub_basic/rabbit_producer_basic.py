@@ -6,6 +6,7 @@ class Rabbit_producer_basic():
     user = None
     passwd = None
     host = None
+    queue = None
     exchange = None
     connection = None
     channel = None
@@ -17,7 +18,10 @@ class Rabbit_producer_basic():
 
         self.channel = self.connection.channel()
 
-        self.channel.exchange_declare(exchange=self.exchange, exchange_type='fanout', durable=True)
+        if self.exchange:
+            self.channel.exchange_declare(exchange=self.exchange, exchange_type='fanout', durable=True)
+        else:
+            self.channel.queue_declare(queue=self.queue)
 
 
     def disconnect_rabbit(self):
@@ -25,20 +29,22 @@ class Rabbit_producer_basic():
 
 
     def show_usage(self):
-        print ('notify_by_telegram.py --host HOST_NAME --user USER --pw PASSWORD --exchange EXCHANGE_NAME --message MESSAGE')
+        print ('notify_by_telegram.py --host HOST_NAME --user USER --pw PASSWORD [--exchange EXCHANGE_NAME | --queue QUEUE_NAME] --message MESSAGE')
 
 
     def main(self, argv):
         try:
-            opts, args = getopt.getopt(argv,"",["host=","exchange=","message=","user=","pw="])
+            opts, args = getopt.getopt(argv,"",["host=","queue=","exchange=","message=","user=","pw="])
             pass
-        except getopt.GetoptError:
-            print('[ERROR] Params received not correct.')
+        except getopt.GetoptError as ex:
+            print('[ERROR] Params received not correct (%s).' % ex.msg)
             self.show_usage()
             sys.exit(2)
         for opt, arg in opts:
             if opt == "--host":
                self.host = arg
+            elif opt == "--queue":
+               self.queue = arg
             elif opt == "--exchange":
                self.exchange = arg
             elif opt == "--message":
@@ -48,15 +54,22 @@ class Rabbit_producer_basic():
             elif opt == "--pw":
                self.passwd = arg
 
-        if (not self.host or not self.exchange or not self.message):
-            print('[ERROR] Mandatory param empty.\nHOST: %s\nEXCHANGE: %s\nUSER: %s\nMESSAGE: %s\n' % (self.host, self.exchange, self.user, self.message))
+        if (not self.host or not self. message or (not self.exchange and not self.queue)):
+            print('[ERROR] Mandatory param empty.\nHOST: %s\nEXCHANGE: %s\nQUEUE: %s\nUSER: %s\nMESSAGE: %s\n' % (self.host, self.exchange, self.queue, self.user, self.message))
             self.show_usage()
             sys.exit(2)
 
         self.connect_to_rabbit()
-        self.channel.basic_publish(exchange=self.exchange,
-                                   routing_key='',
-                                   body=self.message)
+
+        if self.exchange:
+            self.channel.basic_publish(exchange=self.exchange,
+                                       routing_key='',
+                                       body=self.message)
+        else:
+            self.channel.basic_publish(exchange='',
+                                       routing_key=self.queue,
+                                       body=self.message)
+
         self.disconnect_rabbit()
         print(' [*] Connected to RabbitMQ on %s and try to sent message "%s"' % (self.host, self.message))
 
