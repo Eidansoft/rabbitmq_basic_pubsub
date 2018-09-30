@@ -17,7 +17,7 @@ class Rabbit_producer_basic():
 
         self.channel = self.connection.channel()
 
-        self.channel.exchange_declare(exchange=self.exchange, exchange_type='fanout')
+        self.channel.exchange_declare(exchange=self.exchange, exchange_type='fanout', durable=True)
 
 
     def disconnect_rabbit(self):

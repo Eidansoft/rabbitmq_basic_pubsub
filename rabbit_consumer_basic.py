@@ -16,7 +16,7 @@ class Rabbit_consumer_basic():
 
         self.channel = self.connection.channel()
 
-        self.channel.queue_declare(queue=self.queue)
+        self.channel.queue_declare(queue=self.queue, durable=True)
 
         print(' [*] Created connection to RabbitMQ server on %s' % self.host)
 
