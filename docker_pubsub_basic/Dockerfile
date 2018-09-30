@@ -13,9 +13,9 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/reposi
 
 WORKDIR /mnt
 
-ENV QUEUE_HOST rabbit
-ENV QUEUE_NAME telegram
-ENV USER guest
-ENV PW guest
+ENV RABBIT_HOSTNAME rabbit
+ENV RABBIT_USER guest
+ENV RABBIT_PW guest
+ENV RABBIT_QUEUE telegram
 
-CMD notify_by_telegram.py --host $QUEUE_HOST --user $USER --pw $PW --queue $QUEUE_NAME
+CMD notify_by_telegram.py --host $RABBIT_HOSTNAME --user $RABBIT_USER --pw $RABBIT_PW --queue $RABBIT_QUEUE
