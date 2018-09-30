@@ -21,7 +21,7 @@ class Rabbit_producer_basic():
         if self.exchange:
             self.channel.exchange_declare(exchange=self.exchange, exchange_type='fanout', durable=True)
         else:
-            self.channel.queue_declare(queue=self.queue)
+            self.channel.queue_declare(queue=self.queue, durable=True)
 
 
     def disconnect_rabbit(self):
